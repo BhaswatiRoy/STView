@@ -10,7 +10,7 @@ sidebarOptions = st.sidebar.selectbox(
     options = ['Home','PNL','Balance Sheet','Risk','Signals']
 )
 
-securityIds = pd.read_csv("isins.csv")["securityId"]
+securityIds = pd.read_csv("securityIds.csv")["securityId"]
 pnl = pd.read_csv("pnl.csv")
 pnl_intraday = pd.read_csv("pnl_intraday.csv")
 positions = pd.read_csv("positions.csv")
