@@ -1,5 +1,0 @@
-python -m venv stapps
-stapps\Scripts\activate
-
-pip install streamlit pandas numpy plotly
-python -m streamlit run app.py
