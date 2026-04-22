@@ -118,38 +118,7 @@ The app expects the following CSV files with appropriate columns:
 * `risk.csv` → time, securityId, bondRisk, etfRisk, totalRisk, maturity, asset, issuer, rating
 * `balancesheet.csv` → date, trader, balance_sheet_mm
 * `signals.csv` → time, securityId, signal_value
-* `isins.csv` → securityId
+* `securityIds.csv` → securityId
 
 ---
 
-## 🎯 Usage
-
-* Use the sidebar to navigate between modules:
-
-  * **PNL**
-  * **Balance Sheet**
-  * **Risk**
-  * **Signals**
-* Select specific **Security IDs** to drill down into detailed analytics.
-
----
-
-## 🔮 Future Improvements
-
-* Add real-time data integration
-* Improve filtering (date ranges, traders, books)
-* Add export/download functionality
-* Enhance UI/UX with more interactivity
-* Integrate authentication for secure access
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-## 📄 License
-
-This project is open-source and available under the MIT License.
