@@ -4,6 +4,41 @@ ST View is an interactive data visualization dashboard built using **Streamlit**
 
 ---
 
+## 📸 Screenshots
+
+### 2. PNL Dashboard
+
+<pre>
+<img width="1919" height="1070" alt="image" src="https://github.com/user-attachments/assets/db62fe53-638b-44dc-9275-c79bd55fac4b" />
+<img width="1919" height="1069" alt="image" src="https://github.com/user-attachments/assets/707ab0be-a6e3-4312-851b-f3187ad11209" />
+
+</pre>
+
+---
+
+### 3. Balance Sheet
+
+<pre>
+<img src="" width="1010">
+</pre>
+
+---
+
+### 4. Risk Analytics
+
+<pre>
+<img src="" width="1010"> <img src="" width="1010"> <img src="" width="1010"> <img src="" width="1010">
+</pre>
+
+---
+
+### 5. Signals
+
+<pre>
+<img src="" width="1010">
+</pre>
+
+
 ## 🚀 Features
 
 ### 📈 PNL Analytics
