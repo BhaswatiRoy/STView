@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 import streamlit as st
 import plotly.express as px
@@ -11,7 +10,7 @@ sidebarOptions = st.sidebar.selectbox(
     options = ['Home','PNL','Balance Sheet','Risk','Signals']
 )
 
-isins = pd.read_csv("isins.csv")["isin"]
+securityIds = pd.read_csv("isins.csv")["securityId"]
 pnl = pd.read_csv("pnl.csv")
 pnl_intraday = pd.read_csv("pnl_intraday.csv")
 positions = pd.read_csv("positions.csv")
@@ -23,16 +22,16 @@ if sidebarOptions == 'PNL':
 
     st.header("PNL Report")
 
-    # PNL BY DESIG LEVEL + TOTAL PNL BY DESIG
-    pnl_by_desig = pnl.sort_values(["desig","date"])
-    pnl_by_desig["cumEstPnl"] = pnl_by_desig.groupby(["desig"])["estPnl"].cumsum()
+    # PNL BY trader LEVEL + TOTAL PNL BY trader
+    pnl_by_trader = pnl.sort_values(["trader","date"])
+    pnl_by_trader["cumEstPnl"] = pnl_by_trader.groupby(["trader"])["estPnl"].cumsum()
 
-    pnl_by_desig_agg = pnl_by_desig.groupby("date")["estPnl"].sum().reset_index()
-    pnl_by_desig_agg["cumEstPnlAllDesigs"] = pnl_by_desig_agg["estPnl"].cumsum()
+    pnl_by_trader_agg = pnl_by_trader.groupby("date")["estPnl"].sum().reset_index()
+    pnl_by_trader_agg["cumEstPnlAlltraders"] = pnl_by_trader_agg["estPnl"].cumsum()
 
-    pnl_by_desig_timeseries = px.line(pnl_by_desig, x = "date", y = "cumEstPnl", color = "desig", title = "PNL by Desig")
-    pnl_by_desig_timeseries.add_scatter(x = pnl_by_desig_agg["date"], y = pnl_by_desig_agg["cumEstPnlAllDesigs"], mode = "lines", name = "Total Pnl - All Desigs")
-    st.plotly_chart(pnl_by_desig_timeseries)
+    pnl_by_trader_timeseries = px.line(pnl_by_trader, x = "date", y = "cumEstPnl", color = "trader", title = "PNL by trader")
+    pnl_by_trader_timeseries.add_scatter(x = pnl_by_trader_agg["date"], y = pnl_by_trader_agg["cumEstPnlAlltraders"], mode = "lines", name = "Total Pnl - All traders")
+    st.plotly_chart(pnl_by_trader_timeseries)
 
     # PNL BY BOOK LEVEL + TOTAL PNL BY BOOK
     pnl_by_book = pnl.sort_values(["book", "date"])
@@ -45,28 +44,28 @@ if sidebarOptions == 'PNL':
     pnl_by_book_timeseries.add_scatter(x = pnl_by_book_agg["date"], y = pnl_by_book_agg["cumEstPnlAllBooks"], mode = "lines", name = "Total Pnl - All Books")
     st.plotly_chart(pnl_by_book_timeseries)
 
-    # PNL BY SOURCE + TOTAL PNL BY SOURCE
-    pnl_by_source = pnl.sort_values(["source", "date"])
-    pnl_by_source["cumEstPnl"] = pnl_by_source.groupby(["source"])["estPnl"].cumsum()
+    # PNL BY tradeChannel + TOTAL PNL BY Trade Channel
+    pnl_by_tradeChannel = pnl.sort_values(["tradeChannel", "date"])
+    pnl_by_tradeChannel["cumEstPnl"] = pnl_by_tradeChannel.groupby(["tradeChannel"])["estPnl"].cumsum()
 
-    pnl_by_source_agg = pnl_by_source.groupby("date")["estPnl"].sum().reset_index()
-    pnl_by_source_agg["cumEstPnlAllSources"] = pnl_by_source_agg["estPnl"].cumsum()
+    pnl_by_tradeChannel_agg = pnl_by_tradeChannel.groupby("date")["estPnl"].sum().reset_index()
+    pnl_by_tradeChannel_agg["cumEstPnlAlltradeChannels"] = pnl_by_tradeChannel_agg["estPnl"].cumsum()
 
-    pnl_by_source_timeseries = px.line(pnl_by_source, x = "date", y = "cumEstPnl", color = "source", title = "Pnl by Source")
-    pnl_by_source_timeseries.add_scatter(x = pnl_by_source_agg["date"], y = pnl_by_source_agg["cumEstPnlAllSources"], mode = "lines", name = "Total Pnl - All Sources")
-    st.plotly_chart(pnl_by_source_timeseries)
+    pnl_by_tradeChannel_timeseries = px.line(pnl_by_tradeChannel, x = "date", y = "cumEstPnl", color = "tradeChannel", title = "Pnl by Trade Channel")
+    pnl_by_tradeChannel_timeseries.add_scatter(x = pnl_by_tradeChannel_agg["date"], y = pnl_by_tradeChannel_agg["cumEstPnlAlltradeChannels"], mode = "lines", name = "Total Pnl - All Trade Channels")
+    st.plotly_chart(pnl_by_tradeChannel_timeseries)
 
-    # PNL BREAKDOWN BY ISIN LEVEL
-    isin_selection = st.selectbox("Select an Isin", isins)
-    pnl_by_isin_filtered = pnl_intraday[pnl_intraday["isin"] == isin_selection]
+    # PNL BREAKDOWN BY SECURITY ID LEVEL
+    securityId_selection = st.selectbox("Select a Security Id", securityIds)
+    pnl_by_securityId_filtered = pnl_intraday[pnl_intraday["securityId"] == securityId_selection]
     pnl_components = ["accrued","funding","pullToPar","carry","brokerFeePnl","cashTradingPnl","cashDelta","newBiz"]
-    pnl_by_isin_timeseries = px.line(pnl_by_isin_filtered, x = "time", y = pnl_components, title = f"Pnl Breakdown - {isin_selection}")
-    st.plotly_chart(pnl_by_isin_timeseries)
+    pnl_by_securityId_timeseries = px.line(pnl_by_securityId_filtered, x = "time", y = pnl_components, title = f"Pnl Breakdown - {securityId_selection}")
+    st.plotly_chart(pnl_by_securityId_timeseries)
 
 
 if sidebarOptions == 'Balance Sheet':
-    st.header("Balance Sheet by Desig")
-    balancesheet_timeseries = px.area(balancesheet, x = "date", y = "balance_sheet_mm", color = "desig")
+    st.header("Balance Sheet by trader")
+    balancesheet_timeseries = px.area(balancesheet, x = "date", y = "balance_sheet_mm", color = "trader")
     st.plotly_chart(balancesheet_timeseries)
 
 
@@ -78,10 +77,10 @@ if sidebarOptions == 'Risk':
     risk_total_timeseries = px.line(risk_total, x = "time", y = ["bondRisk", "etfRisk", "totalRisk"], title = "Overall Risk")
     st.plotly_chart(risk_total_timeseries)
 
-    isin_selection = st.selectbox("Select an Isin", isins)
-    risk_filtered = risk[risk["isin"] == isin_selection]
-    risk_by_isin_timeseries = px.line(risk_filtered, x = "time", y =["bondRisk", "etfRisk", "totalRisk"], title = "Risk by Isin")
-    st.plotly_chart(risk_by_isin_timeseries)
+    securityId_selection = st.selectbox("Select a Security Id", securityIds)
+    risk_filtered = risk[risk["securityId"] == securityId_selection]
+    risk_by_securityId_timeseries = px.line(risk_filtered, x = "time", y =["bondRisk", "etfRisk", "totalRisk"], title = "Risk by Security Id")
+    st.plotly_chart(risk_by_securityId_timeseries)
 
     risk_aggregated_maturity = risk.groupby("maturity")["totalRisk"].sum().reset_index()
     risk_maturity_bar = go.Figure()
@@ -106,8 +105,8 @@ if sidebarOptions == 'Risk':
 
 if sidebarOptions == 'Signals':
 
-    st.header("Signal by Isin")
-    isin_selection = st.selectbox("Select an Isin", isins)
-    signals_filtered = signals[signals["isin"] == isin_selection]
+    st.header("Signal by Security Id")
+    securityId_selection = st.selectbox("Select an Security Id", securityIds)
+    signals_filtered = signals[signals["securityId"] == securityId_selection]
     signal_timeseries = px.line(signals_filtered, x="time", y= "signal_value")
     st.plotly_chart(signal_timeseries)
