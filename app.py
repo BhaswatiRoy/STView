@@ -18,47 +18,48 @@ signals = pd.read_csv("signals.csv")
 risk = pd.read_csv("risk.csv")
 balancesheet = pd.read_csv("balancesheet.csv")
 
+
 if sidebarOptions == 'PNL':
 
     st.header("PNL Report")
 
     # PNL BY trader LEVEL + TOTAL PNL BY trader
     pnl_by_trader = pnl.sort_values(["trader","date"])
-    pnl_by_trader["cumEstPnl"] = pnl_by_trader.groupby(["trader"])["estPnl"].cumsum()
+    pnl_by_trader["cumProjectedPnl"] = pnl_by_trader.groupby(["trader"])["projectedPnl"].cumsum()
 
-    pnl_by_trader_agg = pnl_by_trader.groupby("date")["estPnl"].sum().reset_index()
-    pnl_by_trader_agg["cumEstPnlAlltraders"] = pnl_by_trader_agg["estPnl"].cumsum()
+    pnl_by_trader_agg = pnl_by_trader.groupby("date")["projectedPnl"].sum().reset_index()
+    pnl_by_trader_agg["cumProjectedPnlAllTraders"] = pnl_by_trader_agg["projectedPnl"].cumsum()
 
-    pnl_by_trader_timeseries = px.line(pnl_by_trader, x = "date", y = "cumEstPnl", color = "trader", title = "PNL by trader")
-    pnl_by_trader_timeseries.add_scatter(x = pnl_by_trader_agg["date"], y = pnl_by_trader_agg["cumEstPnlAlltraders"], mode = "lines", name = "Total Pnl - All traders")
+    pnl_by_trader_timeseries = px.line(pnl_by_trader, x = "date", y = "cumProjectedPnl", color = "trader", title = "PNL by Trader")
+    pnl_by_trader_timeseries.add_scatter(x = pnl_by_trader_agg["date"], y = pnl_by_trader_agg["cumProjectedPnlAllTraders"], mode = "lines", name = "Total Pnl - All Traders")
     st.plotly_chart(pnl_by_trader_timeseries)
 
     # PNL BY BOOK LEVEL + TOTAL PNL BY BOOK
     pnl_by_book = pnl.sort_values(["book", "date"])
-    pnl_by_book["cumEstPnl"] = pnl_by_book.groupby(["book"])["estPnl"].cumsum()
+    pnl_by_book["cumProjectedPnl"] = pnl_by_book.groupby(["book"])["projectedPnl"].cumsum()
 
-    pnl_by_book_agg = pnl_by_book.groupby("date")["estPnl"].sum().reset_index()
-    pnl_by_book_agg["cumEstPnlAllBooks"] = pnl_by_book_agg["estPnl"].cumsum()
+    pnl_by_book_agg = pnl_by_book.groupby("date")["projectedPnl"].sum().reset_index()
+    pnl_by_book_agg["cumProjectedPnlAllBooks"] = pnl_by_book_agg["projectedPnl"].cumsum()
 
-    pnl_by_book_timeseries = px.line(pnl_by_book, x = "date", y = "cumEstPnl", color = "book", title = "PNL by Book")
-    pnl_by_book_timeseries.add_scatter(x = pnl_by_book_agg["date"], y = pnl_by_book_agg["cumEstPnlAllBooks"], mode = "lines", name = "Total Pnl - All Books")
+    pnl_by_book_timeseries = px.line(pnl_by_book, x = "date", y = "cumProjectedPnl", color = "book", title = "PNL by Book")
+    pnl_by_book_timeseries.add_scatter(x = pnl_by_book_agg["date"], y = pnl_by_book_agg["cumProjectedPnlAllBooks"], mode = "lines", name = "Total Pnl - All Books")
     st.plotly_chart(pnl_by_book_timeseries)
 
     # PNL BY tradeChannel + TOTAL PNL BY Trade Channel
     pnl_by_tradeChannel = pnl.sort_values(["tradeChannel", "date"])
-    pnl_by_tradeChannel["cumEstPnl"] = pnl_by_tradeChannel.groupby(["tradeChannel"])["estPnl"].cumsum()
+    pnl_by_tradeChannel["cumProjectedPnl"] = pnl_by_tradeChannel.groupby(["tradeChannel"])["projectedPnl"].cumsum()
 
-    pnl_by_tradeChannel_agg = pnl_by_tradeChannel.groupby("date")["estPnl"].sum().reset_index()
-    pnl_by_tradeChannel_agg["cumEstPnlAlltradeChannels"] = pnl_by_tradeChannel_agg["estPnl"].cumsum()
+    pnl_by_tradeChannel_agg = pnl_by_tradeChannel.groupby("date")["projectedPnl"].sum().reset_index()
+    pnl_by_tradeChannel_agg["cumProjectedPnlAllTradeChannels"] = pnl_by_tradeChannel_agg["projectedPnl"].cumsum()
 
-    pnl_by_tradeChannel_timeseries = px.line(pnl_by_tradeChannel, x = "date", y = "cumEstPnl", color = "tradeChannel", title = "Pnl by Trade Channel")
-    pnl_by_tradeChannel_timeseries.add_scatter(x = pnl_by_tradeChannel_agg["date"], y = pnl_by_tradeChannel_agg["cumEstPnlAlltradeChannels"], mode = "lines", name = "Total Pnl - All Trade Channels")
+    pnl_by_tradeChannel_timeseries = px.line(pnl_by_tradeChannel, x = "date", y = "cumProjectedPnl", color = "tradeChannel", title = "Pnl by Trade Channel")
+    pnl_by_tradeChannel_timeseries.add_scatter(x = pnl_by_tradeChannel_agg["date"], y = pnl_by_tradeChannel_agg["cumProjectedPnlAllTradeChannels"], mode = "lines", name = "Total Pnl - All Trade Channels")
     st.plotly_chart(pnl_by_tradeChannel_timeseries)
 
     # PNL BREAKDOWN BY SECURITY ID LEVEL
     securityId_selection = st.selectbox("Select a Security Id", securityIds)
     pnl_by_securityId_filtered = pnl_intraday[pnl_intraday["securityId"] == securityId_selection]
-    pnl_components = ["accrued","funding","pullToPar","carry","brokerFeePnl","cashTradingPnl","cashDelta","newBiz"]
+    pnl_components = ["accrued", "funding", "carry", "commissionPnl", "transactionPnl", "priceMovePnl", "activityPnl"]
     pnl_by_securityId_timeseries = px.line(pnl_by_securityId_filtered, x = "time", y = pnl_components, title = f"Pnl Breakdown - {securityId_selection}")
     st.plotly_chart(pnl_by_securityId_timeseries)
 
